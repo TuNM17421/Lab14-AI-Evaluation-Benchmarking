@@ -22,10 +22,27 @@ Definition of Done Sprint 3:
 """
 
 import os
+import threading
 from typing import List, Dict, Any, Optional, Tuple
 from dotenv import load_dotenv
 
 load_dotenv()
+
+_chroma_lock = threading.Lock()
+_chroma_collection = None
+
+
+def _get_chroma_collection():
+    """Module-level singleton để tránh race condition khi nhiều thread tạo PersistentClient."""
+    global _chroma_collection
+    if _chroma_collection is None:
+        with _chroma_lock:
+            if _chroma_collection is None:
+                import chromadb
+                from index import CHROMA_DB_DIR
+                client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
+                _chroma_collection = client.get_collection("rag_lab")
+    return _chroma_collection
 
 # =============================================================================
 # CẤU HÌNH
@@ -76,11 +93,9 @@ def retrieve_dense(query: str, top_k: int = TOP_K_SEARCH) -> List[Dict[str, Any]
         # Lưu ý: distances trong ChromaDB cosine = 1 - similarity
         # Score = 1 - distance
     """
-    import chromadb
-    from index import get_embedding, CHROMA_DB_DIR
+    from index import get_embedding
 
-    client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
-    collection = client.get_collection("rag_lab")
+    collection = _get_chroma_collection()
 
     query_embedding = get_embedding(query)
     results = collection.query(
@@ -90,12 +105,14 @@ def retrieve_dense(query: str, top_k: int = TOP_K_SEARCH) -> List[Dict[str, Any]
     )
 
     chunks = []
-    for doc, meta, dist in zip(
+    for cid, doc, meta, dist in zip(
+        results["ids"][0],
         results["documents"][0],
         results["metadatas"][0],
         results["distances"][0],
     ):
         chunks.append({
+            "id": cid,
             "text": doc,
             "metadata": meta,
             "score": 1 - dist,  # cosine distance → similarity
@@ -131,15 +148,13 @@ def retrieve_sparse(query: str, top_k: int = TOP_K_SEARCH) -> List[Dict[str, Any
         scores = bm25.get_scores(tokenized_query)
         top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
     """
-    import chromadb
     from rank_bm25 import BM25Okapi
-    from index import CHROMA_DB_DIR
 
-    # Load tất cả chunks từ ChromaDB
-    client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
-    collection = client.get_collection("rag_lab")
+    # Load tất cả chunks từ ChromaDB (singleton)
+    collection = _get_chroma_collection()
     all_data = collection.get(include=["documents", "metadatas"])
 
+    ids = all_data["ids"]
     docs = all_data["documents"]
     metas = all_data["metadatas"]
 
@@ -156,6 +171,7 @@ def retrieve_sparse(query: str, top_k: int = TOP_K_SEARCH) -> List[Dict[str, Any
     chunks = []
     for idx in top_indices:
         chunks.append({
+            "id": ids[idx],
             "text": docs[idx],
             "metadata": metas[idx],
             "score": float(scores[idx]),  # BM25 raw score (thang đo riêng, không normalize)

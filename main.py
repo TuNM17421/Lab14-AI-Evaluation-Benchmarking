@@ -17,6 +17,11 @@ async def run_benchmark_with_results(agent_version: str):
     with open("data/golden_set.jsonl", "r", encoding="utf-8") as f:
         dataset = [json.loads(line) for line in f if line.strip()]
 
+    limit = int(os.getenv("BENCHMARK_LIMIT", "0"))
+    if limit > 0:
+        dataset = dataset[:limit]
+        print(f"🔢 BENCHMARK_LIMIT={limit} → chạy {len(dataset)} case đầu tiên.")
+
     if not dataset:
         print("❌ File data/golden_set.jsonl rỗng. Hãy tạo ít nhất 1 test case.")
         return None, None
