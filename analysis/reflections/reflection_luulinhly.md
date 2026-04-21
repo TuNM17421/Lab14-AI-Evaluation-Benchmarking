@@ -1,9 +1,7 @@
 # Báo cáo Cá nhân — Lab 14: AI Evaluation Benchmarking
 
-| | |
-|---|---|
 | **Sinh viên** | Lưu Linh Ly |
-| **MSSV** | *(điền MSSV)* |
+| **MSSV** | 2A202600119 |
 | **Vai trò** | Data Team — SDG & Retrieval Eval |
 | **Commit chính** | [`7fde070`](https://github.com/TuNM17421/Lab14-AI-Evaluation-Benchmarking/commit/7fde070) — *update track data team* (+935 LOC) |
 
