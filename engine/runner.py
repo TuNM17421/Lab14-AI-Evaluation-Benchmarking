@@ -3,7 +3,7 @@ import time
 from typing import List, Dict
 
 class BenchmarkRunner:
-    def __init__(self, agent, evaluator, judge, max_concurrent: int = 10):
+    def __init__(self, agent, evaluator, judge, max_concurrent: int = 2):
         self.agent = agent
         self.evaluator = evaluator
         self.judge = judge
