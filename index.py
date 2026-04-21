@@ -468,11 +468,4 @@ if __name__ == "__main__":
     list_chunks()
     inspect_metadata_coverage()
 
-    print("\nSprint 1 setup hoàn thành!")
-    print("Việc cần làm:")
-    print("  1. Implement get_embedding() - chọn OpenAI hoặc Sentence Transformers")
-    print("  2. Implement phần TODO trong build_index()")
-    print("  3. Chạy build_index() và kiểm tra với list_chunks()")
-    print(
-        "  4. Nếu chunking chưa tốt: cải thiện _split_by_size() để split theo paragraph"
-    )
+    print("\nInsert data thành công!")

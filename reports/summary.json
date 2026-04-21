@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "version": "Agent_V2_Optimized",
+    "total": 63,
+    "timestamp": "2026-04-21 16:39:44"
+  },
+  "metrics": {
+    "avg_score": 4.154761904761905,
+    "hit_rate": 0.8888888888888888,
+    "mrr": 0.8227513227513228,
+    "agreement_rate": 0.9206349206349206,
+    "avg_latency": 2.6257397142878274
+  },
+  "regression": {
+    "v1_score": 4.01984126984127,
+    "delta": 0.13492063492063533,
+    "status": "PASS"
+  }
+}

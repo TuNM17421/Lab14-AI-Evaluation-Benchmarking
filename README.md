@@ -31,10 +31,10 @@
 
 ## 📤 Danh mục nộp bài (Submission Checklist)
 Nhóm nộp 1 đường dẫn Repository (GitHub/GitLab) chứa:
-1. [ ] **Source Code**: Toàn bộ mã nguồn hoàn chỉnh.
-2. [ ] **Reports**: File `reports/summary.json` và `reports/benchmark_results.json` (được tạo ra sau khi chạy `main.py`).
-3. [ ] **Group Report**: File `analysis/failure_analysis.md` (đã điền đầy đủ).
-4. [ ] **Individual Reports**: Các file `analysis/reflections/reflection_[Tên_SV].md`.
+1. [x] **Source Code**: Toàn bộ mã nguồn hoàn chỉnh.
+2. [x] **Reports**: File `reports/summary.json` và `reports/benchmark_results.json` (được tạo ra sau khi chạy `main.py`).
+3. [x] **Group Report**: File `analysis/failure_analysis.md` (đã điền đầy đủ).
+4. [ ] **Individual Reports**: Các file `analysis/reflections/reflection_[Tên_SV].md` (mỗi thành viên tự hoàn thiện).
 
 ---
 
@@ -60,13 +60,16 @@ Báo cáo 5 Whys phải chỉ ra được lỗi nằm ở đâu: Ingestion pipel
 # 1. Cài đặt dependencies
 pip install -r requirements.txt
 
-# 2. Tạo Golden Dataset (chạy trước khi benchmark)
+# 2. Migrate database (chạy trước khi tạo Golden Dataset)
+python index.py
+
+# 3. Tạo Golden Dataset (chạy trước khi benchmark)
 python data/synthetic_gen.py
 
-# 3. Chạy Benchmark & tạo reports
+# 4. Chạy Benchmark & tạo reports
 python main.py
 
-# 4. Kiểm tra định dạng trước khi nộp
+# 5. Kiểm tra định dạng trước khi nộp (bắt buộc)
 python check_lab.py
 ```
 
@@ -76,6 +79,7 @@ python check_lab.py
 - **Bắt buộc** chạy `python data/synthetic_gen.py` trước để tạo file `data/golden_set.jsonl`. File này không được commit sẵn trong repo.
 - Trước khi nộp bài, hãy chạy `python check_lab.py` để đảm bảo định dạng dữ liệu đã chuẩn. Bất kỳ lỗi định dạng nào dẫn đến việc script chấm điểm tự động không chạy được sẽ bị trừ 5 điểm thủ tục.
 - File `.env` chứa API Key **KHÔNG** được push lên GitHub.
+- Đảm bảo các file báo cáo (`summary.json`, `benchmark_results.json`, `failure_analysis.md`) đã cập nhật đúng số liệu thực tế.
 
 ---
 *Chúc nhóm bạn xây dựng được một Evaluation Factory thực sự mạnh mẽ!*
